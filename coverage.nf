@@ -15,7 +15,7 @@ process coverage_by_chromosome {
         path "${isolate}_cov.csv"
     script:
     """
-    samtools coverage ~/N_glabratus/bam/${isolate}.bam | cut -f1,7 | csvtk tab2csv | csvtk transpose > ${isolate}_cov.csv
+    samtools coverage [path to bam]/{isolate}.bam | cut -f1,7 | csvtk tab2csv | csvtk transpose > ${isolate}_cov.csv
     """
 }
 
@@ -28,7 +28,7 @@ process add_samplename {
         path "*_named.csv"
     script:
     """
-    python3 <<"EOF"
+#!/usr/bin/env python3
 import os
 import csv
 import statistics
@@ -46,7 +46,7 @@ with open(filename,'r') as f, open(outname,'w',newline='') as out:
         numbers = [float(x) for x in row[1:13]]
         median_val = statistics.median(numbers)
         writer.writerow([isolate]+row+[median_val])
-EOF
+
     """
 }
 
